@@ -1,5 +1,6 @@
-# find_region(gpos=c(10614056,10596790),Ranges=geneRanges)
-
+#' find_region(gpos=c(10614056,10596790),Ranges=geneRanges)
+#' @import SCISOR
+#' @export
 find_region = function(gpos,Ranges,ranges.outside=T) {
   if (missing(gpos)) {
     stop("gpos (genomic position) should be specified.")
@@ -18,7 +19,7 @@ find_region_single = function(gpos,Ranges,ranges.outside=T) {
   if (missing(Ranges)) {
     stop("Ranges is missing. See get_Ranges.")
   }
-  x = as.numeric(gpos)  
+  x = as.numeric(gpos)
   ie = which(((x - Ranges$gRanges[,1])*(x - Ranges$gRanges[,4])) <= 0)  # which exon
   if (length(ie)==1) {
     ip = which(c(Ranges$gRanges[ie,1]:Ranges$gRanges[ie,4])==x)  # which position
@@ -31,9 +32,9 @@ find_region_single = function(gpos,Ranges,ranges.outside=T) {
         Ranges$lRanges[ib,4]
       } else {
         if (which.min(abs(x - Ranges$gRanges))==1) {
-          Ranges$lRanges[1,1] - abs(Ranges$gRanges[1,1]-x)  
+          Ranges$lRanges[1,1] - abs(Ranges$gRanges[1,1]-x)
         } else {
-          Ranges$lRanges[nexon,4] + abs(Ranges$gRanges[nexon,4]-x)  
+          Ranges$lRanges[nexon,4] + abs(Ranges$gRanges[nexon,4]-x)
         }
       }
     } else {

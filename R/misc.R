@@ -1,4 +1,4 @@
-################################################################
+#' @export
 plot.hy = function(x,y,indlist=NULL,text=F,
                    colmat=NULL,indcol="red",
                    cex=1,indcex=1.2,...) {
@@ -23,7 +23,7 @@ plot.hy = function(x,y,indlist=NULL,text=F,
   }
 }
 
-################################################################
+#' @export
 boxplot.hy=function(value,robust=FALSE,
                     title=NULL,title.cex=2,
                     ylab=NULL,
@@ -173,7 +173,7 @@ boxplot.hy=function(value,robust=FALSE,
   }
 }
 
-##################################################################################
+#' @export
 boxplot.hy.v0=function(value,title=NULL,ylab=NULL,
                        value.labels=NULL,tick.at=NULL,
                        indlist=NULL,outliers=NULL,
@@ -231,7 +231,7 @@ boxplot.hy.v0=function(value,title=NULL,ylab=NULL,
 
 }
 
-##################################################################################
+#' @export
 vec2text.hy=function(x,quote.mark=T){
   n = length(x);
   fr = x[1]; # first entry
@@ -253,7 +253,8 @@ vec2text.hy=function(x,quote.mark=T){
   }# if
   return(fr);
 }
-#################################################################################################
+
+#' @export
 dendcluster.hy = function(get.hclust,row.col="row",cutoff=NULL,numCluster=NULL,
                           drawplot=TRUE,
                           title="dendrogram",colorBranch=NULL) {
@@ -317,12 +318,13 @@ dendcluster.hy = function(get.hclust,row.col="row",cutoff=NULL,numCluster=NULL,
   return(list(cluster.data=dendcluster,cluster.dend=cluster.order))
 }
 
-#################################################################################################
+#' @export
 textplot.hy = function(textonplot="text", ...) {
   plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
   text(x = 0.5, y = 0.5, textonplot, ...)
 }
-#################################################################################################
+
+#' @export
 palette.hy = function(set="normal") {
   require(RColorBrewer); require(wesanderson)
   if (set=="normal") {
@@ -335,7 +337,8 @@ palette.hy = function(set="normal") {
               wes_palette(n=5,"Cavalcanti1")))
   }
 }
-#################################################################################################
+
+#' @export
 get.hclust.hy = function(value,main="Heatmap",method="complete",
                          col.order=NULL,row.order=NULL,
                          col.order.mat=NULL,row.order.mat=NULL,
@@ -376,7 +379,7 @@ get.hclust.hy = function(value,main="Heatmap",method="complete",
 }
 
 
-#################################################################################################
+#' @export
 heatmap.hy = function(get.hclust,main="Heatmap",only.heatmap=FALSE,
                       col=NULL,breaks=NULL,color.quantile=NULL,color.key=TRUE,
                       col.dend=TRUE,row.dend=TRUE,
@@ -596,7 +599,7 @@ heatmap.hy = function(get.hclust,main="Heatmap",only.heatmap=FALSE,
   par(mfrow=c(1,1),mar=c(5,4,4,1)+0.1)
 }
 
-#################################################################################################
+#' @export
 heatmap3.hy = function(get.hclust,
                        rowlabels=NULL,rowlabel.size=0.5,
                        collabels=NULL,collabel.size=0.5,
@@ -796,27 +799,13 @@ heatmap3.hy = function(get.hclust,
 }
 
 
-##################################################################################
+#' @export
 split.char <- function(barcode){
   tmp.split <- strsplit(barcode,"-")[[1]] ;
   return(paste0(tmp.split[1],"-",tmp.split[2],"-",tmp.split[3],"-",tmp.split[4]))
 }
-##################################################################################
-match.hy <- function(x,y){
-  #	If x=y, then return 1. Otherwise, return0.
-  return(as.numeric((x==y))) ;
-  #	Example
-  #a <- c("cat","dog","tiger","elephant") ;
-  #b <- c("rabbit","cat","dog")
-  #outer(a,b,FUN=match.hy)
-}
-##################################################################################
-BeorNot.hy = function(x,y){
-  # Check that which elements of x is in y, or not.
-  yesno = colSums(outer(y, x, FUN=function(x,y){return(as.numeric(x==y))}));
-  return(list(yes=x[yesno==1], no=x[yesno==0]));
-}
-############################################################################
+
+#' @export
 pca.hy <- function(data, subt.mean=TRUE){
   ##  PCA with the covariance matrix (X%*%t(X)/n-1) where X=data
   ##  data: d by r (d is the number of variables, n is the number of subjects)
@@ -837,7 +826,8 @@ pca.hy <- function(data, subt.mean=TRUE){
   stdprojmat <- diag(1/sqrt(eigenval))%*%projmat		#  standardized
   return(list(dirmat=dirmat, projmat=projmat, eigenval=eigenval, stdprojmat=stdprojmat))
 }
-############################################################################
+
+#' @export
 yaxis.hy <- function(mat){
   #  mat : d by n matrix
   tempmax <- max(mat) ;
@@ -845,481 +835,9 @@ yaxis.hy <- function(mat){
   templen <- tempmax-tempmin ;
   return(c(tempmin-0.002*templen, tempmax+0.002*templen)) ;
 }
-##################################################################################
-RNAcurveBackground = function(datmat,dai,
-                              same.yaxis=TRUE, is.box=TRUE,
-                              title="Sample", title.cex=1,
-                              mean.plot=TRUE,ylim=NULL,xlim=NULL,
-                              ep.col=NULL,
-                              ex.num=NULL,int.num=NULL,ex.num.col=NULL,int.num.col=NULL,
-                              ylab=NULL, xlab=NULL,yaxis.logcount=NULL,...) {
-  ## % Draw RNA-seq background or mean plot
-  ## % datmat        : d by n  (columns are each sample)
-  ## % ex.num        : exon list that will be colored. (from the right in figure)
-  ## % int.num       : intron list that will be colored. (from the right in figure)
-  ## % Updated       : March 18, 2018
-  ## % Hyo Young Choi
-
-  # Start
-  # Extract variables from "gene.input" list.
-  epl = dai$epm[,2]; epr = dai$epm[,3]
-  num.intron = dai$intron.len;
-
-  require("RColorBrewer");
-  # display.brewer.all()
-  candicol1=c(brewer.pal(9,"Pastel1")[6], # candidate colors for exonic regions
-              brewer.pal(8,"Pastel2")[6],
-              brewer.pal(9,"YlOrBr")[1],
-              brewer.pal(9,"YlOrRd")[1],
-              brewer.pal(9,"YlOrRd")[2],
-              brewer.pal(9,"Reds")[1],
-              brewer.pal(9,"RdPu")[1],
-              brewer.pal(9,"OrRd")[1],
-              brewer.pal(9,"OrRd")[2],
-              brewer.pal(9,"Oranges")[1],
-              brewer.pal(9,"Oranges")[2],
-              "aliceblue");
-  candicol2=brewer.pal(12,"Set3") # candidiate colors for regions with shape changes
-  candicol3=brewer.pal(8,"Pastel2") # candidiate colors for regions with shape changes
-  candicol = c(candicol2,candicol3);
-
-  if (is.null(ep.col)){ ep.col = candicol1[9] } else {ep.col=candicol1[ep.col]}
-  if (is.null(ex.num.col)){ ex.num.col=candicol3[1] } else {ex.num.col=candicol[ex.num.col]}
-  if (is.null(int.num.col)){ int.num.col=candicol3[3] } else {int.num.col=candicol[int.num.col]}
-
-  # mean.curve = apply(datmat, 1, mean) ;
-  mean.curve = apply(datmat, 1, median) ;
-
-  plot.title = title;
-
-  if (!is.null(yaxis.logcount)) {
-    labels = c(0,1,5,7,8,10,20,50,100,500,1000,2000,5000,10000,15000,20000,25000)
-    tick.at = log10(labels+yaxis.logcount)-log10(yaxis.logcount);
-  } else {
-    tick.at = NULL;
-    labels = TRUE;
-  }
-
-  if (same.yaxis) {
-    ylim0 = yaxis.hy(datmat)
-    if (is.null(xlim)) {
-      xlim = c(0,nrow(datmat))
-    }
-    plot(mean.curve, type='l', lty=2, lwd=0.5, ylim=c(min(0,ylim0[1]),ylim0[2]),
-         xlim=xlim, axes=F, ylab=NA, xlab=NA, xaxs="i",yaxs="i", col="white") ;
-  } else {
-    if (is.null(ylim)){
-      ylim=yaxis.hy(datmat[,indlist]);
-    }
-    if (is.null(xlim)) {
-      xlim = c(0,nrow(datmat))
-    }
-    plot(mean.curve, type='l', lty=2, lwd=0.5, ylim=c(min(0,ylim[1]),ylim[2]),
-         xlim=xlim, axes=F, ylab=NA, xlab=NA, xaxs="i",yaxs="i", col="white") ;
-  }
-  for (i in 1:length(epl)){
-    polygon(x=c(rep(epl[i],2),rep(epr[i],2)),y=c(-10000,(max(datmat)+10000),(max(datmat)+10000),-10000),col=ep.col,border=NA) ;
-  }
-  for (l in ex.num){
-    polygon(x=c(rep(epl[l],2),rep(epr[l],2)),y=c(-10000,(max(datmat)+10000),(max(datmat)+10000),-10000),col=ex.num.col,border=NA) ;
-  }
-  for (l in int.num){
-    polygon(x=c(rep(epr[l],2),rep(epl[l+1],2)),y=c(-10000,(max(datmat)+10000),(max(datmat)+10000),-10000),col=int.num.col,border=NA) ;
-  }
-  abline(v=epl,lty=1,col="lightyellow3",lwd=0.1) ;
-  abline(v=epr,lty=1,col="lightyellow3",lwd=0.1) ;
-  if (is.box) {
-    box()
-  }
-  title(plot.title, cex.main=title.cex,font.main=1,line=0.3);
-  axis(side=1, tck=-0.005, labels=NA) ;
-  axis(side=1, lwd=0, line=-1, cex.axis=0.9) ;
-  axis(side=2, tck=-0.015, at=tick.at, labels=labels,lwd=0,line=-1,cex.axis=0.9)
-  # axis(side=2,lwd=0,line=-0.5,cex.axis=0.9) ;
-  # axis(side=2, lwd=0, line=-0.5, cex.axis=0.9) ;
-  if (mean.plot){
-    points(mean.curve, type='l', ...) ;
-  }
-  mtext(side=1, xlab, line=1.5, cex=1.3) ;
-  mtext(side=2, ylab, line=1.5, cex=1.3) ;
-
-}
-##################################################################################
-RNAcurveOne.minfo = function(datmat,indlist,dai,barcode,
-                             minfo=NULL,mlegend=FALSE,mcol=NULL,
-                             colmat=NULL, same.yaxis=TRUE, is.box=TRUE,
-                             title.id=TRUE, title="Sample", title.cex=1,
-                             mean.plot=TRUE, mean.col="grey",ylim=NULL,xlim=NULL,
-                             cex.axis=0.9,
-                             ep.col=NULL,title.barcode=TRUE,
-                             ex.num=NULL,int.num=NULL,ex.num.col=NULL,int.num.col=NULL,
-                             ylab=NULL, xlab=NULL,yaxis.logcount=NULL,...) {
-  ## % Draw individual curves with the mean curve of datmat and vertical lines on exon edges.
-  ## % datmat        : d by n  (columns are each sample)
-  ## % indlist       : a vector of lists of sample id to be drawn
-  ## % mutation.info : mutation information for one gene to be plotted.
-  ##                    - all mutations will be indicated by vertical lines
-  ##                    - If NULL, no action. (only curve)
-  ## % colmat        : color matrix to be used. (length should be same as n)
-  ## % ex.num        : exon list that will be colored. (from the right in figure)
-  ## % int.num       : intron list that will be colored. (from the right in figure)
-  ## % Updated       : September 15, 2017
-  ## % Hyo Young Choi
-
-  # Start
-  # Extract variables from "gene.input" list.
-  epl = dai$epm[,2]; epr = dai$epm[,3]
-  num.intron = dai$intron.len;
-
-  require("RColorBrewer");
-  # display.brewer.all()
-  candicol1=c(brewer.pal(9,"Pastel1")[6], # candidate colors for exonic regions
-              brewer.pal(8,"Pastel2")[6],
-              brewer.pal(9,"YlOrBr")[1],
-              brewer.pal(9,"YlOrRd")[1],
-              brewer.pal(9,"YlOrRd")[2],
-              brewer.pal(9,"Reds")[1],
-              brewer.pal(9,"RdPu")[1],
-              brewer.pal(9,"OrRd")[1],
-              brewer.pal(9,"OrRd")[2],
-              brewer.pal(9,"Oranges")[1],
-              brewer.pal(9,"Oranges")[2],
-              "aliceblue");
-  candicol2=brewer.pal(12,"Set3") # candidiate colors for regions with shape changes
-  candicol3=brewer.pal(8,"Pastel2") # candidiate colors for regions with shape changes
-  candicol = c(candicol2,candicol3);
-
-  if (is.null(ep.col)){ ep.col = candicol1[9] } else {ep.col=candicol1[ep.col]}
-  if (is.null(ex.num.col)){ ex.num.col=candicol3[1] } else {ex.num.col=candicol[ex.num.col]}
-  if (is.null(int.num.col)){ int.num.col=candicol3[3] } else {int.num.col=candicol[int.num.col]}
 
 
-  #  Create colmat by using SVD
-  if (is.null(colmat)) {
-    x.mda <- svd(datmat) ;
-    projmat <- diag(x.mda$d)%*%t(x.mda$v) ;
-    projmat[1,] <- -projmat[1,] ;
-    colmat <- rainbow(n=length(projmat[1,]), start=0, end=0.756)[rank(-projmat[1,])]
-  }
-
-  # mean.curve = apply(datmat, 1, mean) ;
-  mean.curve = apply(datmat, 1, median) ;
-
-  if (title.id) {
-    plot.title = paste0(title," # ")
-    if (title.barcode){
-      plot.title = paste0(plot.title,indlist," | ",barcode[indlist]);
-    } else {
-      plot.title = paste0(plot.title,indlist);
-    }
-  } else {
-    if (title.barcode) {
-      plot.title = paste0(barcode[indlist]);
-    } else {
-      plot.title = title;
-    }
-  }
-
-  if (!is.null(yaxis.logcount)) {
-    labels = c(0,1,5,7,8,10,20,50,100,500,1000,2000,5000,10000,15000,20000,25000)
-    tick.at = log10(labels+yaxis.logcount)-log10(yaxis.logcount);
-  } else {
-    tick.at = NULL;
-    labels = TRUE;
-  }
-
-  if (same.yaxis) {
-    if (is.null(xlim)) {
-      xlim = c(0,nrow(datmat))
-    }
-    if (is.null(ylim)) {
-      ylim0 = yaxis.hy(datmat)
-    } else {
-      ylim0=ylim
-    }
-    plot(mean.curve, type='l', lty=2, lwd=0.5, ylim=c(min(0,ylim0[1]),ylim0[2]),
-         xlim=xlim, axes=F, ylab=NA, xlab=NA, xaxs="i",yaxs="i", col="white") ;
-  } else {
-    if (is.null(ylim)){
-      ylim=yaxis.hy(datmat[,indlist]);
-    }
-    if (is.null(xlim)) {
-      xlim = c(0,nrow(datmat))
-    }
-    plot(mean.curve, type='l', lty=2, lwd=0.5, ylim=c(min(0,ylim[1]),ylim[2]),
-         xlim=xlim, axes=F, ylab=NA, xlab=NA, xaxs="i",yaxs="i", col="white") ;
-  }
-  for (i in 1:length(epl)){
-    polygon(x=c(rep(epl[i],2),rep(epr[i],2)),y=c(-10000,(max(datmat)+10000),(max(datmat)+10000),-10000),col=ep.col,border=NA) ;
-  }
-  for (l in ex.num){
-    polygon(x=c(rep(epl[l],2),rep(epr[l],2)),y=c(-10000,(max(datmat)+10000),(max(datmat)+10000),-10000),col=ex.num.col,border=NA) ;
-  }
-  for (l in int.num){
-    polygon(x=c(rep(epr[l],2),rep(epl[l+1],2)),y=c(-10000,(max(datmat)+10000),(max(datmat)+10000),-10000),col=int.num.col,border=NA) ;
-  }
-  abline(v=epl,lty=1,col="lightyellow3",lwd=0.1) ;
-  abline(v=epr,lty=1,col="lightyellow3",lwd=0.1) ;
-  if (is.box) {
-    box()
-  }
-  title(plot.title, cex.main=title.cex,font.main=1,line=0.3);
-  axis(side=1, tck=-0.005, labels=NA) ;
-  axis(side=1, lwd=0, line=-0.5, cex.axis=cex.axis) ;
-  axis(side=2, tck=-0.015, at=tick.at, labels=labels,lwd=0,line=-1,cex.axis=cex.axis)
-  # axis(side=2,lwd=0,line=-0.5,cex.axis=0.9) ;
-  # axis(side=2, lwd=0, line=-0.5, cex.axis=0.9) ;
-  if (mean.plot){
-    points(mean.curve, type='l', lty=1, lwd=2, col=mean.col) ;
-  }
-  points(datmat[,indlist], type='l', lty=1, col=colmat[indlist], ...) ;
-  mtext(side=1, xlab, line=1.5, cex=1.3) ;
-  mtext(side=2, ylab, line=1.5, cex=1.3) ;
-
-
-  if (!is.null(minfo)) {
-    mutation.info = minfo[,c(8,9,6)]; mut_start=NULL; mut_end=NULL;
-    if (nrow(mutation.info)>0) {
-      mut_start = apply(matrix(as.numeric(minfo[,3]),ncol=1),1,
-                        FUN=function(x){mutpos.hy(x,exon=exon,is.intron=TRUE,num.intron=dai$intron.len)})
-      mut_end = apply(matrix(as.numeric(minfo[,4]),ncol=1),1,
-                      FUN=function(x){mutpos.hy(x,exon=exon,is.intron=TRUE,num.intron=dai$intron.len)})
-    }
-    mutation.info = cbind(mutation.info,mut_start,mut_end);
-
-    case.barcode = barcode[indlist];
-    mut_types_temp =  c("Frame_Shift_Del","Frame_Shift_Ins","In_Frame_Del","In_Frame_Ins","Missense_Mutation",
-                        "Nonsense_Mutation","Nonstop_Mutation","RNA","Silent","Splice_Site","Translation_Start_Site");
-    if (is.null(mcol)) {
-      colmut = rep("black",length(mut_types_temp));
-      colmut[6] = "blue"; colmut[10] = "red";
-    } else {
-      colmut = mcol;
-    }
-
-    f1=function(x,barcodeset){which(grepl(x,barcodeset)==1)}
-    if (nrow(mutation.info)>0) {
-      mutype0 = mutation.info[unlist(sapply(case.barcode,f1,mutation.info$barcode2)),3]
-      mutpos0 = mutation.info[unlist(sapply(case.barcode,f1,mutation.info$barcode2)),4]
-      # mutype0 = mutation.info[which(mutation.info$barcode2==case.barcode),3];
-      # mutpos0 = mutation.info[which(mutation.info$barcode2==case.barcode),4];
-      if (length(mutpos0)>0) {
-        mutpos1 = mutpos0 ;
-        colvec = colmut[apply(matrix(mutype0,ncol=1),1,FUN=function(x){which(mut_types_temp==x)})];
-        abline(v=mutpos1,lwd=2,col=colvec) ;
-        if (mlegend) {
-          mutype1 = unique(mutype0); colvec1 = unique(colvec);
-          legend("topleft",bty="n",legend=mutype1,lty=1,col=colvec1,cex=1.5)
-        }# if (mlegend)
-      }
-    }# (nrow(mutation.info)>0)
-  }
-}
-
-##################################################################################
-RNAcurve.minfo = function(datmat,indlist=NULL,dai,barcode,
-                          mpar=NULL,one.plot=FALSE,same.yaxis=TRUE,is.box=TRUE,
-                          minfo=NULL,mlegend=TRUE,mcol=NULL,
-                          mzoom=FALSE,mtype.zoom="Splice_Site",
-                          colmat=NULL,
-                          title.id=TRUE, title="Sample", title.cex=1, title.barcode=TRUE,
-                          mean.plot=TRUE, mean.col="grey", fullpar=FALSE,ylim=NULL,xlim=NULL,
-                          ep.col=NULL,cex.axis=0.9,
-                          ex.num=NULL,int.num=NULL,ex.num.col=NULL,int.num.col=NULL,
-                          ylab=NULL, xlab=NULL,yaxis.logcount=NULL,...) {
-  ## % Draw individual curves with the mean curve of datmat and vertical lines on exon edges.
-  ## % datmat        : d by n  (columns are each sample)
-  ## % indlist       : a vector of lists of sample id to be drawn
-  ## % mutation.info : mutation information for one gene to be plotted.
-  ##                    - all mutations will be indicated by vertical lines
-  ##                    - If NULL, no action. (only curve)
-  ## % colmat        : color matrix to be used. (length should be same as n)
-  ## % ex.num        : exon list that will be colored. (from the right in figure)
-  ## % int.num       : intron list that will be colored. (from the right in figure)
-  ## % Updated       : September 15, 2017
-  ## % Hyo Young Choi
-
-  #  Create colmat by using SVD
-  if (is.null(colmat)) {
-    x.mda <- svd(datmat) ;
-    projmat <- diag(x.mda$d)%*%t(x.mda$v) ;
-    projmat[1,] <- -projmat[1,] ;
-    colmat <- rainbow(n=length(projmat[1,]), start=0, end=0.756)[rank(-projmat[1,])]
-  }
-
-  epl = dai$epm[,2]; epr = dai$epm[,3]
-  num.intron = dai$intron.len;
-
-  if (!is.null(minfo)) {
-    mutation.info = minfo[,c(8,9,6)]; mut_start=NULL; mut_end=NULL;
-    if (nrow(mutation.info)>0) {
-      mut_start = apply(matrix(as.numeric(minfo[,3]),ncol=1),1,
-                        FUN=function(x){mutpos.hy(x,exon=exon,is.intron=TRUE,num.intron=dai$intron.len)})
-      mut_end = apply(matrix(as.numeric(minfo[,4]),ncol=1),1,
-                      FUN=function(x){mutpos.hy(x,exon=exon,is.intron=TRUE,num.intron=dai$intron.len)})
-    }
-    mutation.info = cbind(mutation.info,mut_start,mut_end);
-
-    # mut_types =  c("Frame_Shift_Del","Frame_Shift_Ins","In_Frame_Del","In_Frame_Ins","Missense_Mutation",
-    #                "Nonsense_Mutation","Nonstop_Mutation","RNA","Silent","Splice_Site","Translation_Start_Site");
-  }
-
-  if (one.plot) {
-    if (is.null(indlist)) {
-      case=1
-      RNAcurveOne.minfo(datmat=datmat,indlist=case,dai,barcode,
-                        minfo=NULL,mlegend=FALSE,mcol=mcol,
-                        colmat=colmat, same.yaxis=TRUE,is.box=is.box,
-                        title.id=FALSE,title=title, title.cex=title.cex,
-                        mean.plot=mean.plot, mean.col=,mean.col,ylim=ylim,xlim=xlim,
-                        ep.col=ep.col,title.barcode=FALSE,cex.axis=cex.axis,
-                        ex.num=ex.num,int.num=int.num,ex.num.col=ex.num.col,int.num.col=int.num.col,
-                        ylab=ylab, xlab=xlab,yaxis.logcount=yaxis.logcount,...)
-      for (case in 2:ncol(datmat)) {
-        points(datmat[,case],type='l', lty=1, col=colmat[case], ...)
-      }
-    } else {
-      RNAcurveOne.minfo(datmat=datmat,indlist=indlist[1],dai=dai,barcode=barcode,
-                        minfo=minfo,mlegend=FALSE,mcol=mcol,
-                        colmat=colmat, same.yaxis=TRUE,is.box=is.box,
-                        title.id=FALSE,title=title, title.cex=title.cex,
-                        mean.plot=mean.plot, mean.col=,mean.col,ylim=ylim,xlim=xlim,
-                        ep.col=ep.col,title.barcode=FALSE,cex.axis=cex.axis,
-                        ex.num=ex.num,int.num=int.num,ex.num.col=ex.num.col,int.num.col=int.num.col,
-                        ylab=ylab, xlab=xlab,yaxis.logcount=yaxis.logcount,...)
-      for (case in indlist[2:length(indlist)]) {
-        points(datmat[,case],type='l', lty=1, col=colmat[case], ...)
-      }
-    }
-  } else {
-    ncurve = length(indlist);
-    if (ncurve==1) {
-      if (mzoom) {
-        case.barcode = barcode[indlist];
-        if (!is.null(minfo)) {
-          if (nrow(mutation.info)>0) {
-            mutype0 = mutation.info[which(mutation.info$barcode2==case.barcode),3];
-            mutpos0 = mutation.info[which(mutation.info$barcode2==case.barcode),4];
-            mutpos0 = mutpos0[which(mutype0==mtype.zoom)][1]
-            if (length(mutpos0)>0) {
-              mutpos1 = mutpos0 ;
-              xlim = c(mutpos1-200,mutpos1+200)
-            }
-          }# (nrow(mutation.info)>0)
-        }
-      }# if (mzoom)
-
-      RNAcurveOne.minfo(datmat=datmat,indlist=indlist,dai=dai,barcode=barcode,
-                        minfo=minfo,mlegend=mlegend,mcol=mcol,
-                        colmat=colmat,
-                        title.id=title.id,title=title, title.cex=title.cex,
-                        mean.plot=mean.plot, mean.col=mean.col,
-                        same.yaxis=same.yaxis,ylim=ylim,xlim=xlim,
-                        ep.col=ep.col,title.barcode=title.barcode,cex.axis=cex.axis,
-                        ex.num=ex.num,int.num=int.num,ex.num.col=ex.num.col,int.num.col=int.num.col,
-                        ylab=ylab, xlab=xlab,yaxis.logcount=yaxis.logcount,...)
-    } else {
-      if (fullpar){
-        par(mfrow=c(6,5), mar=c(2,3,1.5,0.5))
-        for (id in indlist){
-          if (mzoom) {
-            case.barcode = barcode[indlist];
-            if (!is.null(minfo)) {
-              if (nrow(mutation.info)>0) {
-                mutype0 = mutation.info[which(mutation.info$barcode2==case.barcode),3];
-                mutpos0 = mutation.info[which(mutation.info$barcode2==case.barcode),4];
-                mutpos0 = mutpos0[which(mutype0==mtype.zoom)][1]
-                if (length(mutpos0)>0) {
-                  mutpos1 = mutpos0 ;
-                  xlim = c(mutpos1-200,mutpos1+200)
-                }
-              }# (nrow(mutation.info)>0)
-            }
-          }# if (mzoom)
-
-          RNAcurveOne.minfo(datmat=datmat,indlist=id,dai=dai,barcode=barcode,
-                            minfo=minfo,mlegend=mlegend,mcol=mcol,
-                            colmat=colmat, same.yaxis=same.yaxis,
-                            title.id=title.id,title=title, title.cex=title.cex,
-                            mean.plot=mean.plot, mean.col=mean.col,ylim=ylim,xlim=xlim,
-                            ep.col=ep.col,title.barcode=title.barcode,cex.axis=cex.axis,
-                            ex.num=ex.num,int.num=int.num,ex.num.col=ex.num.col,int.num.col=int.num.col,
-                            ylab=ylab, xlab=xlab,yaxis.logcount=yaxis.logcount,...)
-        }
-      } else {
-        if (is.null(mpar)) {
-          if ((1 < ncurve) & (ncurve <=4)) {
-            par(mfrow=c(1,4), mar=c(2,3,1.5,0.5))
-          } else if ((4 < ncurve) & (ncurve <=16)) {
-            kk=ceiling(ncurve/4)
-            par(mfrow=c(kk,4), mar=c(2,2,1.5,0.5))
-          } else if ((16 < ncurve) & (ncurve <=30)) {
-            kk=ceiling(ncurve/5)
-            par(mfrow=c(kk,5), mar=c(2,3,1.5,0.5))
-          } else {
-            par(mfrow=c(6,5), mar=c(2,3,1.5,0.5))
-          }
-        } else {
-          par(mfrow=c(6,5), mar=c(2,3,1.5,0.5))
-        }
-        for (id in indlist){
-          if (mzoom) {
-            case.barcode = barcode[indlist];
-            if (!is.null(minfo)) {
-              if (nrow(mutation.info)>0) {
-                mutype0 = mutation.info[which(mutation.info$barcode2==case.barcode),3];
-                mutpos0 = mutation.info[which(mutation.info$barcode2==case.barcode),4];
-                mutpos0 = mutpos0[which(mutype0==mtype.zoom)][1]
-                if (length(mutpos0)>0) {
-                  mutpos1 = mutpos0 ;
-                  xlim = c(mutpos1-200,mutpos1+200)
-                }
-              }# (nrow(mutation.info)>0)
-            }
-          }# if (mzoom)
-
-          RNAcurveOne.minfo(datmat=datmat,indlist=id,dai=dai,barcode=barcode,
-                            minfo=minfo,mlegend=mlegend,mcol=mcol,
-                            colmat=colmat, same.yaxis=same.yaxis,
-                            title.id=title.id,title=title, title.cex=title.cex,
-                            mean.plot=mean.plot, mean.col=mean.col,ylim=ylim,xlim=xlim,
-                            ep.col=ep.col,title.barcode=title.barcode,cex.axis=cex.axis,
-                            ex.num=ex.num,int.num=int.num,ex.num.col=ex.num.col,int.num.col=int.num.col,
-                            ylab=ylab, xlab=xlab,yaxis.logcount=yaxis.logcount,...)
-        }
-      }
-    }
-  }
-}
-
-##################################################################################
-split.char <- function(barcode){
-  tmp.split <- strsplit(barcode,"-")[[1]] ;
-  return(paste0(tmp.split[1],"-",tmp.split[2],"-",tmp.split[3],"-",tmp.split[4]))
-}
-##################################################################################
-mutpos.hy = function(x,exon,is.intron=FALSE,num.intron=NULL){
-  a <- exon ;
-  b <- strsplit(a,":")[[1]][2] ;
-  c <- gsub("-",",",b) ;
-  d <- as.numeric(strsplit(c,",")[[1]]) ;
-  seqdir = strsplit(exon,":")[[1]][3] ;
-
-  epl <- d[seq(1,length(d),by=2)] ;
-  epr <- d[seq(2,length(d),by=2)] ;
-  ep <- cbind(epl,epr) ;
-
-  endpos = epr[length(epr)];
-  tlen = mutpos0.hy(x=endpos,exon=exon,is.intron=is.intron,num.intron=num.intron);
-  mutpos = mutpos0.hy(x=x,exon=exon,is.intron=is.intron,num.intron=num.intron);
-
-  if (seqdir=="+") {
-    return(mutpos);
-  } else {
-    return(tlen-mutpos+1);
-  }
-}
-##################################################################################
+#' @export
 split.exon = function(exon) {
   a <- exon ;
   b <- strsplit(a,":")[[1]][2] ;
@@ -1337,80 +855,3 @@ split.exon = function(exon) {
   }
 }
 
-##################################################################################
-mutpos0.hy <- function(x,exon,is.intron=FALSE,num.intron=NULL){
-  ## %  First version: mutpos.hy.2
-  ## %  Last updated: 11/26/2015
-  ## %  Find mutation position in coverage file.
-  a <- exon ;
-  b <- strsplit(a,":")[[1]][2] ;
-  c <- gsub("-",",",b) ;
-  d <- as.numeric(strsplit(c,",")[[1]]) ;
-  epl <- d[seq(1,length(d),by=2)] ;
-  epr <- d[seq(2,length(d),by=2)] ;
-  ep <- cbind(epl,epr) ;
-  #  exon.count <- length(epl) ;
-  #%#%  Find which exon contains the mutation
-  which.exon.hy <- function(x,ep){
-    if (is.null(dim(ep))){
-      ep = matrix(ep,nrow=1)
-    }
-    int <- which((x-ep[,1]>=0) & (x-ep[,2]<=0));
-    if (length(int)>0){
-      return(list(int=int,in.exon=TRUE));
-    } else {
-      int <- max(which(x-ep[,1]>0));
-      return(list(int=int,in.exon=FALSE));
-    }
-  }
-  if (!is.intron) {		#  Exons only
-    mut.exon <- which.exon.hy(x,ep);
-    ep.tmp <- as.matrix(ep[1:mut.exon$int,]);
-    if (mut.exon$int==1){ ep.tmp <- t(ep.tmp)}
-    if (mut.exon$in.exon){
-      ep.tmp[mut.exon$int,2] <- x;
-    }
-    ep2 <- ep.tmp - ep.tmp[,1] + 1;
-    if (nrow(ep2)==1){ y <- ep2[1,2] } else {
-      new.ep <- ep2 + c(0,cumsum(ep2[1:(nrow(ep2)-1),2]));
-      y <- new.ep[mut.exon$int,2];
-    }
-  } else {				#  Exons + Introns
-    ep2 <- ep - ep[1,1] + 1;
-    xp <- x - ep[1,1] + 1;
-
-    if (is.null(num.intron)) {	#  All introns
-      y <- xp;
-    } else {				#  Parts of introns
-      ep2 <- cbind(ep2[,1]-num.intron,ep2,ep2[,2]+num.intron); ep2[1,1] <- 1;
-      if (nrow(ep2)>1) {
-        overlap.id <- which(ep2[1:(nrow(ep2)-1),4]>ep2[2:nrow(ep2),1]) ;
-        ep2[overlap.id,4] <- ep2[overlap.id,3];
-        ep2[(overlap.id+1),1] <- ep2[overlap.id,3] + 1;
-        ep2[nrow(ep2),4] <- ep2[nrow(ep2),3];
-      }
-      #%#%
-      y = rep(0,length(xp));
-      for (i in 1:length(xp)){
-        ixp = xp[i];
-
-        if ((ixp > 0) & (ixp<=max(ep2))) {
-          mut.exon <- which.exon.hy(ixp,ep2[,c(1,4)]);
-          ep2.tmp <- as.matrix(ep2[1:mut.exon$int,c(1,4)]);
-          if (mut.exon$int==1){ ep2.tmp <- t(ep2.tmp) }
-          if (mut.exon$in.exon){
-            ep2.tmp[mut.exon$int,2] <- ixp;
-          }
-          ep3 <- ep2.tmp - ep2.tmp[,1] + 1;
-          if (nrow(ep3)==1){ y[i] <- ep3[1,2] } else {
-            new.ep <- ep3 + c(0,cumsum(ep3[1:(nrow(ep3)-1),2]));
-            y[i] <- new.ep[mut.exon$int,2];
-          }
-        } else {
-          y[i] = ixp
-        }
-      }
-    } # end of if (is.null(num.intron))
-  }
-  return(y);
-}

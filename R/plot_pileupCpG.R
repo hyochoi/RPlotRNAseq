@@ -1,3 +1,5 @@
+#' Plot pileup with CpG islands
+#'
 #' @import SCISSOR
 #' @export
 plot_pileupCpG = function(Pileup,Ranges,cpgData,cases=NULL, ...) {

@@ -2,10 +2,15 @@
 % Please edit documentation in R/find_region.R
 \name{find_region}
 \alias{find_region}
-\title{find_region(gpos=c(10614056,10596790),Ranges=geneRanges)}
+\title{Find a region for a given genomic position in the working locus}
 \usage{
 find_region(gpos, Ranges, ranges.outside = T)
 }
 \description{
-find_region(gpos=c(10614056,10596790),Ranges=geneRanges)
+Find a region for a given genomic position in the working locus
+}
+\examples{
+regions="chr17:7571720-7573008,7579700-7579721,7579839-7579940:-"
+geneRanges=get_Ranges(Gene="TP53",regions=regions,outputType="part_intron")
+find_region(gpos=c(7573008),Ranges=geneRanges)
 }

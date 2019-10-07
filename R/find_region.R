@@ -1,5 +1,5 @@
 #' find_region(gpos=c(10614056,10596790),Ranges=geneRanges)
-#' @import SCISOR
+#' @import SCISSOR
 #' @export
 find_region = function(gpos,Ranges,ranges.outside=T) {
   if (missing(gpos)) {

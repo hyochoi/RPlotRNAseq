@@ -77,7 +77,7 @@ yaxis.hy <- function(mat){
 
 
 #' @export
-split.exon = function(exon) {
+split_exon = function(exon) {
   a <- exon ;
   b <- strsplit(a,":")[[1]][2] ;
   c <- gsub("-",",",b) ;

@@ -1,24 +1,59 @@
 #' @export
 plot.hy = function(x,y,indlist=NULL,text=F,
                    colmat=NULL,indcol="red",
-                   cex=1,indcex=1.2,...) {
+                   cex=1,indcex=1.2,xlim=NULL,ylim=NULL,...) {
   n=length(x)
   if (length(indlist)==0) {indlist=NULL}
+  if (is.null(xlim)) {
+    xlim=yaxis.hy(x)
+  }
+  if (is.null(ylim)) {
+    ylim=yaxis.hy(y)
+  }
   if (is.null(indlist)) {
     if (is.null(colmat)) {
       colmat=rep("black",length(x))
     }
-    plot(x=x,y=y,col=colmat,...)
+    plot(x=x,y=y,col=colmat,xlim=xlim,ylim=ylim,...)
   } else {
     if (is.null(colmat)) {
       colmat=rep("grey",n)
       colmat[indlist]=rep(indcol,length(indlist))
     }
-    plot(x[-indlist],y=y[-indlist],col=colmat[-indlist],cex=cex,xlim=yaxis.hy(x),ylim=yaxis.hy(y),...)
+    plot(x[-indlist],y=y[-indlist],col=colmat[-indlist],cex=cex,xlim=xlim,ylim=ylim,...)
     if (!text) {
       points(x[indlist],y[indlist],col=colmat[indlist],cex=indcex,...)
     } else {
       text(x[indlist],y[indlist],indlist,col=colmat[indlist],cex=indcex,...)
+    }
+  }
+}
+
+#' @export
+KDEscatter = function(X,high=0.7,low=0.3,indlist=NULL,
+                      colmat=NULL,ylim.list=NULL,...) {
+  n = dim(X)[1]
+  m = dim(X)[2]
+
+  par(mfrow=c(m,m),mar=c(2,2,2,2))
+  for (i in 1:m) {
+    for (j in i:m) {
+      if (i==j) {
+        par(mfg=c(i,j))
+        kdeplot.hy(X[,i],high=0.6,low=0.2,indlist=indlist,
+                   colmat=colmat,xlim=ylim.list[[i]],...)
+        title(main=colnames(X)[i])
+      } else {
+        par(mfg=c(i,j))
+        plot.hy(x=X[,j],y=X[,i],indlist=indlist,
+                colmat=colmat,
+                xlim=ylim.list[[j]],ylim=ylim.list[[i]],...)
+        legend("topleft",bty="n",
+               legend=paste("corr =",round(cor(X[,j],X[,i]),digits=3)))
+        # par(mfg=c(i,j))
+        # plot.hy(x=X[,i],y=X[,j],colmat=colmat,pch=19)
+      }
+
     }
   }
 }

@@ -31,7 +31,9 @@ plot.hy = function(x,y,indlist=NULL,text=F,
 
 #' @export
 KDEscatter = function(X,high=0.7,low=0.3,indlist=NULL,
-                      colmat=NULL,ylim.list=NULL,...) {
+                      plot.diag="upper",
+                      colmat=NULL,ylim.list=NULL,
+                      print.corr=TRUE, ...) {
   n = dim(X)[1]
   m = dim(X)[2]
 
@@ -44,16 +46,25 @@ KDEscatter = function(X,high=0.7,low=0.3,indlist=NULL,
                    colmat=colmat,xlim=ylim.list[[i]],...)
         title(main=colnames(X)[i])
       } else {
-        par(mfg=c(i,j))
-        plot.hy(x=X[,j],y=X[,i],indlist=indlist,
-                colmat=colmat,
-                xlim=ylim.list[[j]],ylim=ylim.list[[i]],...)
-        legend("topleft",bty="n",
-               legend=paste("corr =",round(cor(X[,j],X[,i]),digits=3)))
+        if ((plot.diag=="both") | (plot.diag=="upper")) {
+          par(mfg=c(i,j))
+          plot.hy(x=X[,j],y=X[,i],indlist=indlist,
+                  colmat=colmat,
+                  xlim=ylim.list[[j]],ylim=ylim.list[[i]],...)
+          if (print.corr) {
+            legend("topleft",bty="n",
+                   legend=paste("corr =",round(cor(X[,j],X[,i]),digits=3)))
+          }
+        }
+        if ((plot.diag=="both") | (plot.diag=="lower")) {
+          par(mfg=c(j,i))
+          plot.hy(x=X[,i],y=X[,j],indlist=indlist,
+                  colmat=colmat,
+                  xlim=ylim.list[[i]],ylim=ylim.list[[j]],...)
+        }
         # par(mfg=c(i,j))
         # plot.hy(x=X[,i],y=X[,j],colmat=colmat,pch=19)
       }
-
     }
   }
 }

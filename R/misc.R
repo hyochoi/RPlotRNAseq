@@ -1,7 +1,8 @@
 #' @export
 plot.hy = function(x,y,indlist=NULL,text=F,
                    colmat=NULL,indcol="red",
-                   cex=1,indcex=1.2,xlim=NULL,ylim=NULL,...) {
+                   cex=1,indcex=1.2,xlim=NULL,ylim=NULL,
+                   xlab=FALSE,ylab=FALSE,...) {
   n=length(x)
   if (length(indlist)==0) {indlist=NULL}
   if (is.null(xlim)) {
@@ -10,17 +11,37 @@ plot.hy = function(x,y,indlist=NULL,text=F,
   if (is.null(ylim)) {
     ylim=yaxis.hy(y)
   }
+  if (!xlab) { xlab = NULL }
+  if (!ylab) { ylab = NULL }
   if (is.null(indlist)) {
     if (is.null(colmat)) {
       colmat=rep("black",length(x))
     }
-    plot(x=x,y=y,col=colmat,xlim=xlim,ylim=ylim,...)
+    plot(x=x,y=y,col=colmat,xlim=xlim,ylim=ylim,axes=F,ylab=NA,xlab=NA,...)
+    box()
+    abline(0, 0, lty = 2, col = rgb(0.5, 0.5, 0.5))
+    abline(v = 0, lty = 2, col = rgb(0.5, 0.5, 0.5))
+    axis(side = 1, tck = -0.015, labels = NA)
+    axis(side = 1, lwd = 0, line = -1, cex = 0.2, cex.axis = 0.9)
+    axis(side = 2, tck = -0.015, lwd = 0, line = -1, cex.axis = 0.9)
+    mtext(side = 1, xlab, line = 1.5, cex = 0.8)
+    mtext(side = 2, ylab, line = 1.5, cex = 0.8)
   } else {
     if (is.null(colmat)) {
       colmat=rep("grey",n)
       colmat[indlist]=rep(indcol,length(indlist))
     }
-    plot(x[-indlist],y=y[-indlist],col=colmat[-indlist],cex=cex,xlim=xlim,ylim=ylim,...)
+    plot(x[-indlist],y=y[-indlist],col=colmat[-indlist],cex=cex,
+         xlim=xlim,ylim=ylim,
+         axes=F,ylab=NA,xlab=NA,...)
+    box()
+    abline(0, 0, lty = 2, col = rgb(0.5, 0.5, 0.5))
+    abline(v = 0, lty = 2, col = rgb(0.5, 0.5, 0.5))
+    axis(side = 1, tck = -0.015, labels = NA)
+    axis(side = 1, lwd = 0, line = -1, cex = 0.2, cex.axis = 0.9)
+    axis(side = 2, tck = -0.015, lwd = 0, line = -1, cex.axis = 0.9)
+    mtext(side = 1, xlab, line = 1.5, cex = 0.8)
+    mtext(side = 2, ylab, line = 1.5, cex = 0.8)
     if (!text) {
       points(x[indlist],y[indlist],col=colmat[indlist],cex=indcex,...)
     } else {
@@ -37,7 +58,7 @@ KDEscatter = function(X,high=0.7,low=0.3,indlist=NULL,
   n = dim(X)[1]
   m = dim(X)[2]
 
-  par(mfrow=c(m,m),mar=c(2,2,2,2))
+  par(mfrow=c(m,m),mar=c(1.5,1.5,1.5,1.5))
   for (i in 1:m) {
     for (j in i:m) {
       if (i==j) {

@@ -24,8 +24,8 @@ plot.hy = function(x,y,indlist=NULL,text=F,
     axis(side = 1, tck = -0.015, labels = NA)
     axis(side = 1, lwd = 0, line = -1, cex = 0.2, cex.axis = 0.9)
     axis(side = 2, tck = -0.015, lwd = 0, line = -1, cex.axis = 0.9)
-    mtext(side = 1, xlab, line = 1.5, cex = 0.8)
-    mtext(side = 2, ylab, line = 1.5, cex = 0.8)
+    mtext(side = 1, xlab, line = 1, cex = 0.8)
+    mtext(side = 2, ylab, line = 1, cex = 0.8)
   } else {
     if (is.null(colmat)) {
       colmat=rep("grey",n)
@@ -40,8 +40,8 @@ plot.hy = function(x,y,indlist=NULL,text=F,
     axis(side = 1, tck = -0.015, labels = NA)
     axis(side = 1, lwd = 0, line = -1, cex = 0.2, cex.axis = 0.9)
     axis(side = 2, tck = -0.015, lwd = 0, line = -1, cex.axis = 0.9)
-    mtext(side = 1, xlab, line = 1.5, cex = 0.8)
-    mtext(side = 2, ylab, line = 1.5, cex = 0.8)
+    mtext(side = 1, xlab, line = 1, cex = 0.8)
+    mtext(side = 2, ylab, line = 1, cex = 0.8)
     if (!text) {
       points(x[indlist],y[indlist],col=colmat[indlist],cex=indcex,...)
     } else {

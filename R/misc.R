@@ -2,7 +2,7 @@
 plot.hy = function(x,y,indlist=NULL,text=F,
                    colmat=NULL,indcol="red",
                    cex=1,indcex=1.2,xlim=NULL,ylim=NULL,
-                   xlab=FALSE,ylab=FALSE,...) {
+                   xlab=NULL,ylab=NULL,...) {
   n=length(x)
   if (length(indlist)==0) {indlist=NULL}
   if (is.null(xlim)) {
@@ -11,8 +11,6 @@ plot.hy = function(x,y,indlist=NULL,text=F,
   if (is.null(ylim)) {
     ylim=yaxis.hy(y)
   }
-  if (!xlab) { xlab = NULL }
-  if (!ylab) { ylab = NULL }
   if (is.null(indlist)) {
     if (is.null(colmat)) {
       colmat=rep("black",length(x))
@@ -24,8 +22,8 @@ plot.hy = function(x,y,indlist=NULL,text=F,
     axis(side = 1, tck = -0.015, labels = NA)
     axis(side = 1, lwd = 0, line = -1, cex = 0.2, cex.axis = 0.9)
     axis(side = 2, tck = -0.015, lwd = 0, line = -1, cex.axis = 0.9)
-    mtext(side = 1, xlab, line = 1, cex = 0.8)
-    mtext(side = 2, ylab, line = 1, cex = 0.8)
+    mtext(side = 1, xlab, line = 1, cex = 1)
+    mtext(side = 2, ylab, line = 1, cex = 1)
   } else {
     if (is.null(colmat)) {
       colmat=rep("grey",n)
@@ -40,8 +38,8 @@ plot.hy = function(x,y,indlist=NULL,text=F,
     axis(side = 1, tck = -0.015, labels = NA)
     axis(side = 1, lwd = 0, line = -1, cex = 0.2, cex.axis = 0.9)
     axis(side = 2, tck = -0.015, lwd = 0, line = -1, cex.axis = 0.9)
-    mtext(side = 1, xlab, line = 1, cex = 0.8)
-    mtext(side = 2, ylab, line = 1, cex = 0.8)
+    mtext(side = 1, xlab, line = 1, cex = 1)
+    mtext(side = 2, ylab, line = 1, cex = 1)
     if (!text) {
       points(x[indlist],y[indlist],col=colmat[indlist],cex=indcex,...)
     } else {

@@ -15,7 +15,7 @@ plot.hy = function(x,y,indlist=NULL,text=F,
     if (is.null(colmat)) {
       colmat=rep("black",length(x))
     }
-    plot(x=x,y=y,col=colmat,xlim=xlim,ylim=ylim,axes=F,ylab=NA,xlab=NA,...)
+    plot(x=x,y=y,col=colmat,xlim=xlim,ylim=ylim,axes=F,ylab=NA,xlab=NA,cex=cex,...)
     box()
     abline(0, 0, lty = 2, col = rgb(0.5, 0.5, 0.5))
     abline(v = 0, lty = 2, col = rgb(0.5, 0.5, 0.5))

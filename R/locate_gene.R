@@ -1,4 +1,4 @@
-#' Find a gene or a nearest gene using genomic positions or genomic ranges
+#' Find a gene or a nearest gene for genomic positions or genomic ranges
 #'
 #'
 #' @param chr a vector (or a value) of chromosome numbers for genomic ranges.

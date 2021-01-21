@@ -14,6 +14,7 @@
 #' end = start + 10
 #' locate_gene(chr=chr,start=start,end=end)
 #'
+#' @author Hyo Young Choi
 #' @import ensembldb EnsDb.Hsapiens.v75 EnsDb.Hsapiens.v86
 locate_gene = function(chr,start,end=NULL,GRCh=37) {
   require(ensembldb)

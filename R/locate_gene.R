@@ -4,7 +4,7 @@
 #' @param chr a vector (or a value) of chromosome numbers for genomic ranges.
 #' @param start a vector (or a value) specifying start positions for genomic ranges.
 #' @param end a vector (or a value) specifying end positions for genomic ranges. If NULL, start will be used. Default is NULL.
-#' @param GRCh a numeric value indicating which reference genome will be used. GRCh 37 and GRCh38 only available. Default is GRCh=37.
+#' @param GRCh a value (37 or 38) indicating which reference genome will be used. GRCh 37 and GRCh38 only available. Default is GRCh=37.
 #'
 #' @examples
 #' install.packages("BiocManager")

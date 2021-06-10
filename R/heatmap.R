@@ -201,7 +201,7 @@ heatmap.hy = function(get.hclust,main="Heatmap",only.heatmap=FALSE,
           col.numCluster = length(table(colcluster))
         }
         if (is.null(col.colorBranch)) {
-          palette(rainbow(10))
+          palette(rainbow(col.numCluster))
           col.colorBranch = 1:col.numCluster
         }
         coldend = color_branches(coldend,k=col.numCluster,col=col.colorBranch)
@@ -440,7 +440,7 @@ heatmap2.hy = function(get.hclust,main="Heatmap",only.heatmap=FALSE,
           col.numCluster = length(table(colcluster))
         }
         if (is.null(col.colorBranch)) {
-          palette(rainbow(10))
+          palette(rainbow(col.numCluster))
           col.colorBranch = 1:col.numCluster
         }
         coldend = color_branches(coldend,k=col.numCluster,col=col.colorBranch)
